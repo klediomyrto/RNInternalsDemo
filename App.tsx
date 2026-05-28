@@ -16,14 +16,23 @@ import {
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-type RouteKey = 'home';
+import MemoryLeakScreen from './src/screens/MemoryLeakScreen';
+
+type RouteKey = 'home' | 'memory';
 
 const ROUTES: {
   key: RouteKey;
   title: string;
   subtitle: string;
   Component?: React.ComponentType;
-}[] = [];
+}[] = [
+  {
+    key: 'memory',
+    title: 'Memory Leaks',
+    subtitle: 'Stale closures, timers & subscriptions not cleaned up',
+    Component: MemoryLeakScreen,
+  },
+];
 
 const Home = ({ onNavigate }: { onNavigate: (k: RouteKey) => void }) => {
   return (
