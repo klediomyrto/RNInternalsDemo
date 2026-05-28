@@ -5,41 +5,114 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useState } from 'react';
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+  StatusBar,
+  StyleSheet,
+  Pressable,
+  View,
+  ScrollView,
+  Text,
+} from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+type RouteKey = 'home';
+
+const ROUTES: {
+  key: RouteKey;
+  title: string;
+  subtitle: string;
+  Component?: React.ComponentType;
+}[] = [];
+
+const Home = ({ onNavigate }: { onNavigate: (k: RouteKey) => void }) => {
+  return (
+    <ScrollView contentContainerStyle={styles.homeContent}>
+      <Text style={styles.kicker}>React Native Platform Internals</Text>
+      <Text style={styles.h1}>Profiling & Architecture Demos</Text>
+      <Text style={styles.intro}>
+        Hands-on demos for React Native's rendering pipeline, JS engine, and
+        native module system. Explore how JSI, Fabric, TurboModules, and
+        Reanimated worklets actually behave at runtime.
+      </Text>
+      {ROUTES.map(r => (
+        <Pressable
+          key={r.key}
+          style={({ pressed }) => [styles.tile, pressed && styles.tilePressed]}
+          onPress={() => onNavigate(r.key)}
+        >
+          <Text style={styles.tileTitle}>{r.title}</Text>
+          <Text style={styles.tileSub}>{r.subtitle}</Text>
+        </Pressable>
+      ))}
+    </ScrollView>
+  );
+};
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [route, setRoute] = useState<RouteKey>('home');
+  const active = ROUTES.find(r => r.key === route);
+  const Screen = active?.Component;
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <SafeAreaView style={styles.safe}>
+        <StatusBar barStyle="light-content" backgroundColor="#000" />
+        {route !== 'home' && (
+          <View style={styles.header}>
+            <Pressable onPress={() => setRoute('home')} hitSlop={12}>
+              <Text style={styles.back}>‹ Back</Text>
+            </Pressable>
+            <Text style={styles.headerTitle}>{active?.title}</Text>
+            <View style={{ width: 48 }} />
+          </View>
+        )}
+        <View style={styles.body}>
+          {route === 'home' || !Screen ? (
+            <Home onNavigate={setRoute} />
+          ) : (
+            <Screen />
+          )}
+        </View>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  safe: { flex: 1, backgroundColor: '#000' },
+  body: { flex: 1 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#222',
   },
+  back: { color: '#7c9cff', fontSize: 16, width: 60 },
+  headerTitle: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  homeContent: { padding: 20, paddingBottom: 48 },
+  kicker: {
+    color: '#7c4dff',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  h1: { color: '#fff', fontSize: 26, fontWeight: '800', marginTop: 4 },
+  intro: { color: '#aaa', fontSize: 14, lineHeight: 21, marginVertical: 14 },
+  tile: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#2a2a2a',
+  },
+  tilePressed: { backgroundColor: '#202020', borderColor: '#3949ab' },
+  tileTitle: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  tileSub: { color: '#999', fontSize: 13, marginTop: 4, lineHeight: 18 },
 });
 
 export default App;
