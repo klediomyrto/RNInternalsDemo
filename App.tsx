@@ -18,8 +18,9 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import MemoryLeakScreen from './src/screens/MemoryLeakScreen';
 import FlatListScreen from './src/screens/FlatListScreen';
+import ConcurrentScreen from './src/screens/ConcurrentScreen';
 
-type RouteKey = 'home' | 'memory' | 'flatlist';
+type RouteKey = 'home' | 'memory' | 'flatlist' | 'concurrent';
 
 const ROUTES: {
   key: RouteKey;
@@ -38,6 +39,12 @@ const ROUTES: {
     title: 'List Virtualization',
     subtitle: 'ScrollView vs naive vs optimized FlatList',
     Component: FlatListScreen,
+  },
+  {
+    key: 'concurrent',
+    title: 'Concurrent Rendering',
+    subtitle: 'useDeferredValue / useTransition under load',
+    Component: ConcurrentScreen,
   },
 ];
 
