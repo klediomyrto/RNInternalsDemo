@@ -133,10 +133,4 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
   },
   statLabel: { color: '#999', fontSize: 11, marginTop: 2, textAlign: 'center' },
-  mono: {
-    color: '#9ccc65',
-    fontFamily: 'Courier',
-    fontSize: 12,
-    lineHeight: 18,
-  },
 });

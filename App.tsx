@@ -17,8 +17,9 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import MemoryLeakScreen from './src/screens/MemoryLeakScreen';
+import FlatListScreen from './src/screens/FlatListScreen';
 
-type RouteKey = 'home' | 'memory';
+type RouteKey = 'home' | 'memory' | 'flatlist';
 
 const ROUTES: {
   key: RouteKey;
@@ -31,6 +32,12 @@ const ROUTES: {
     title: 'Memory Leaks',
     subtitle: 'Stale closures, timers & subscriptions not cleaned up',
     Component: MemoryLeakScreen,
+  },
+  {
+    key: 'flatlist',
+    title: 'List Virtualization',
+    subtitle: 'ScrollView vs naive vs optimized FlatList',
+    Component: FlatListScreen,
   },
 ];
 
